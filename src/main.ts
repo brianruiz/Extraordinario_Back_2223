@@ -1,34 +1,22 @@
-import {Application, Router } from "oak"
+import {Application, Router} from "oak";
+import { addEvent } from "./resolvers/post.ts";
+import { event } from "./resolvers/get.ts";
+import { deleteEvent } from "./resolvers/delete.ts";
 
 
-
-
-const router = new Router
-
+const router = new Router();
 router
-    .get("/getStatus", (ctx) => {
-        ctx.response.body = "Todo OK "
-        ctx.response.status = 200
-        //date today
-        const date = new Date()
-        console.log(date)
-        //format dd-mm-yyyy
-        const day = date.getDate()
-        const month = date.getMonth() + 1
-        const year = date.getFullYear()
-        const dateFormated = ${day}-${month}-${year}
-        console.log(dateFormated)
-        ctx.response.body = dateFormated
+    .get("/test", (context) =>{
+        context.response.body = "Funcionandoooo"
 
     })
+    .post("/addEvent", addEvent)
+    .get("/event/:id", event)
+    .delete("/deleteEvent/:id", deleteEvent)
 
+const app = new Application();
+app.use(router.routes());
+app.use(router.allowedMethods());
 
-
-
-const app = new Application()
-
-app.use(router.routes())
-app.use(router.allowedMethods())
-
-await app.listen({ port: 7777 })
-console.log("Server running on port 7777")
+console.info("Server waiting for request on port 7777");
+await app.listen({port: 7777});
